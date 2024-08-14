@@ -24,16 +24,130 @@ M = 2**31
 
 
 class GDF():
+    """
+    Implements ``read_gdf`` and ``write_gdf`` methods compatible with GDF (Graph Data Format) files.
 
+    GDF is a compact file format originally implemented by `GUESS <http://graphexploration.cond.org/>`__.
+    Although the software itself is not anymore maintained, the format is still supported by active
+    open-source projects such as `Gephi <https://gephi.org/>`__.
+    It is based on a tabular text format, defined by the simple following rules:
+
+    * A first line starting with ``nodedef>name VARCHAR`` defines the node table.
+
+    * Each subsequent line contains a node name and its attributes separated by commas.
+
+    * A second line starting with ``edgedef>node1 VARCHAR,node2 VARCHAR`` defines the edge table.
+
+    * Each subsequent line contains an edge and its attributes separated by commas.
+
+    The following object types are supported by the format: ``VARCHAR``, ``INT``, ``LONG``, ``FLOAT``,
+    ``DOUBLE``, and ``BOOLEAN``. The format also supports single and double quotes as text delimiters.
+
+    .. note::
+
+       A property named ``directed`` can be added to the edge table to specify if directed (``True``) or
+       undirected (``False``). If not found, the graph will be considered as undirected by default.
+
+    The following example displays a simple GDF file with two nodes (:math:`A`, :math:`B`) and one
+    edge. Note that nodes in this example do not have attributes, so the node table is left empty:
+
+    .. code-block:: text
+
+       nodedef>name VARCHAR
+       edgedef>node1 VARCHAR,node2 VARCHAR
+       A,B
+
+    The following code creates this graph, writes it to a GDF file, and reads it afterwards:
+
+    .. code-block:: python
+
+       >>> import networkx as nx
+       >>> from networkx_gdf import read_gdf, write_gdf
+       >>>
+       >>> G = nx.Graph()
+       >>> G.add_edge("A", "B")
+       >>>
+       >>> write_gdf(G, "graph.gdf")
+       >>> read_gdf("graph.gdf")
+
+       <networkx.classes.graph.Graph object at 0x7f3b9c7b2a60>
+
+    Both methods are static and do not require instantiation of the class, allowing inheritance:
+
+    .. code-block:: python
+
+       >>> from networkx_gdf import GDF
+       >>>
+       >>> class MyClass(GDF):
+       >>>     ...
+       >>>
+       >>> G = MyClass.read_gdf("graph.gdf")
+       >>> MyClass.write_gdf(G, "graph.gdf")
+
+    For details on each method, please refer to their documentation: `read_gdf <#networkx_gdf.read_gdf>`_
+    and `write_gdf <#networkx_gdf.write_gdf>`_.
+
+    .. seealso::
+
+       The `GDF format <https://gephi.org/users/supported-graph-formats/gdf-format/>`__
+       specification in Gephi's documentation for further information.
+
+    """
     @staticmethod
     def read_gdf(
         path: str,
         directed: Optional[bool] = None,
         multigraph: Optional[bool] = None,
-        node_attr: Optional[Union[list, bool]] = None,
-        edge_attr: Optional[Union[list, bool]] = None,
+        node_attr: Optional[Union[list, bool]] = True,
+        edge_attr: Optional[Union[list, bool]] = True,
     ) -> nx.Graph:
-        """ Returns a NetworkX graph object from a Geographic Data File. """
+        """
+        Returns a NetworkX graph object from a GDF file.
+
+        :param path: Path to the GDF file.
+        :param directed: Consider edges as directed or undirected. Optional. Default is ``None``.
+
+            * If ``None``, decides based on ``'directed'`` edge attribute in file, if it exists.
+              In case it does not exist, the graph will be considered as undirected.
+
+            * If ``True``, returns a `DiGraph <https://networkx.org/documentation/stable/reference/classes/digraph.html>`__
+              or `MultiDiGraph <https://networkx.org/documentation/stable/reference/classes/multidigraph.html>`__
+              object.
+
+            * If ``False``, returns a `Graph <https://networkx.org/documentation/stable/reference/classes/graph.html>`__
+              or `MultiGraph <https://networkx.org/documentation/stable/reference/classes/multigraph.html>`__
+              object.
+
+        :param multigraph: Consider multiple edges among pairs of nodes. Optional. Default
+            is ``None``.
+
+            * If ``None``, decides based on number of edges among node pairs.
+
+            * If ``True``, returns a `MultiGraph <https://networkx.org/documentation/stable/reference/classes/multigraph.html>`__
+              or `MultiDiGraph <https://networkx.org/documentation/stable/reference/classes/multidigraph.html>`__
+              object.
+
+            * If ``False``, **sums edge weights** and returns a
+              `Graph <https://networkx.org/documentation/stable/reference/classes/graph.html>`__
+              or `DiGraph <https://networkx.org/documentation/stable/reference/classes/digraph.html>`__
+              object.
+
+        :param node_attr: Accepts a ``list`` or ``bool``. Optional. Default is ``True``.
+
+            * If a ``list``, only the specified attributes will be considered.
+
+            * If ``True``, all node attributes will be considered.
+
+            * If ``False``, no node attributes will be considered.
+
+        :param edge_attr: Accepts a ``list`` or ``bool``. Optional. Default is ``True``.
+
+            * If a ``list``, only the specified attributes will be considered.
+
+            * If ``True``, all edge attributes will be considered.
+
+            * If ``False``, no edge attributes will be considered.
+        """
         source, target = "node1", "node2"
 
         def get_def(content):
@@ -124,9 +238,30 @@ class GDF():
     def write_gdf(
         G: nx.Graph,
         path: str,
-        node_attr: Optional[Union[list, bool]] = None,
-        edge_attr: Optional[Union[list, bool]] = None,
+        node_attr: Optional[Union[list, bool]] = True,
+        edge_attr: Optional[Union[list, bool]] = True,
     ) -> None:
+        """
+        Writes a NetworkX graph object to a GDF file.
+
+        :param G: NetworkX graph object.
+        :param path: Path to the GDF file.
+        :param node_attr: Accepts a ``list`` or ``bool``. Optional. Default is ``True``.
+
+           * If a ``list``, only the specified attributes will be considered.
+
+           * If ``True``, all node attributes will be considered.
+
+           * If ``False``, no node attributes will be considered.
+
+        :param edge_attr: Accepts a ``list`` or ``bool``. Optional. Default is ``True``.
+
+           * If a ``list``, only the specified attributes will be considered.
+
+           * If ``True``, all edge attributes will be considered.
+
+           * If ``False``, no edge attributes will be considered.
+        """
         types = {value.__name__: key for key, value in TYPES.items()}
 
         def get_type(series):
