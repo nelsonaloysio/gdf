@@ -28,10 +28,10 @@ templates_path = ["_templates"]
 # -- AutoDoc configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
 
+autodoc_mock_imports = ["pandas"]
 autodoc_typehints = "both"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_static_path = ["_static"]
 html_theme = "sphinx_rtd_theme"
