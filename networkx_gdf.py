@@ -1,4 +1,4 @@
-from io import StringIO
+from io import BufferedReader, BufferedWriter, BytesIO, StringIO, TextIOWrapper
 from typing import Optional, Union
 
 import networkx as nx
@@ -16,8 +16,8 @@ TYPES = {
 }
 
 QUOTES = {
-    "single": "'",
-    "double": '"',
+    "'": "single",
+    '"': "double",
 }
 
 M = 2**31
@@ -30,7 +30,7 @@ class GDF():
     GDF is a compact file format originally implemented by `GUESS <http://graphexploration.cond.org/>`__.
     Although the software itself is not anymore maintained, the format is still supported by active
     open-source projects such as `Gephi <https://gephi.org/>`__.
-    It is based on a tabular text format, defined by the simple following rules:
+    It is based on a tabular text format, and is defined by the simple following rules:
 
     * A first line starting with ``nodedef>name VARCHAR`` defines the node table.
 
@@ -43,13 +43,10 @@ class GDF():
     The following object types are supported by the format: ``VARCHAR``, ``INT``, ``LONG``, ``FLOAT``,
     ``DOUBLE``, and ``BOOLEAN``. The format also supports single and double quotes as text delimiters.
 
-    .. note::
+    .. rubric:: File example
 
-       A property named ``directed`` can be added to the edge table to specify if directed (``True``) or
-       undirected (``False``). If not found, the graph will be considered as undirected by default.
-
-    The following example displays a simple GDF file with two nodes (:math:`A`, :math:`B`) and one
-    edge. Note that nodes in this example do not have attributes, so the node table is left empty:
+    The example below displays a simple GDF file with two nodes (:math:`A`, :math:`B`) and one edge.
+    Note that nodes here do not have any attributes, so the node table after the first line may be left empty:
 
     .. code-block:: text
 
@@ -57,7 +54,17 @@ class GDF():
        edgedef>node1 VARCHAR,node2 VARCHAR
        A,B
 
-    The following code creates this graph, writes it to a GDF file, and reads it afterwards:
+    A special property named ``directed`` can be added to the edge table to specify directed (``True``)
+    or undirected (``False``) edges. If not found, the graph will be considered as undirected by default.
+
+    .. seealso::
+
+       The `GDF format <https://gephi.org/users/supported-graph-formats/gdf-format/>`__
+       specification in Gephi's documentation for more information and examples.
+
+    .. rubric:: Code example
+
+    The following code creates the graph above, writes it to a GDF file, and reads it afterwards:
 
     .. code-block:: python
 
@@ -72,7 +79,7 @@ class GDF():
 
        <networkx.classes.graph.Graph object at 0x7f3b9c7b2a60>
 
-    Both methods are static and do not require instantiation of the class, allowing inheritance:
+    Both methods are static and do not require instantiation as an object if the class is inherited:
 
     .. code-block:: python
 
@@ -84,38 +91,40 @@ class GDF():
        >>> G = MyClass.read_gdf("graph.gdf")
        >>> MyClass.write_gdf(G, "graph.gdf")
 
-    For details on each method, please refer to their documentation: `read_gdf <#networkx_gdf.read_gdf>`_
-    and `write_gdf <#networkx_gdf.write_gdf>`_.
-
-    .. seealso::
-
-       The `GDF format <https://gephi.org/users/supported-graph-formats/gdf-format/>`__
-       specification in Gephi's documentation for further information.
-
+    For details on each method, please refer to their documentation:
+    `read_gdf <https://networkx-gdf.readthedocs.io/en/latest/api.html#networkx_gdf.read_gdf>`_
+    and
+    `write_gdf <https://networkx-gdf.readthedocs.io/en/latest/api.html#networkx_gdf.write_gdf>`_.
     """
     @staticmethod
     def read_gdf(
-        path: str,
+        file: Union[str, BufferedReader, BytesIO, StringIO, TextIOWrapper],
         directed: Optional[bool] = None,
         multigraph: Optional[bool] = None,
         node_attr: Optional[Union[list, bool]] = True,
         edge_attr: Optional[Union[list, bool]] = True,
+        encoding: str = "utf-8",
+        errors: str = "strict",
     ) -> nx.Graph:
         """
-        Returns a NetworkX graph object from a GDF file.
+        Returns a NetworkX graph object from file path or object.
 
-        :param path: Path to the GDF file.
+        :param object file: Object or string containing path to GDF file.
         :param directed: Consider edges as directed or undirected. Optional. Default is ``None``.
 
             * If ``None``, decides based on ``'directed'`` edge attribute in file, if it exists.
               In case it does not exist, the graph will be considered as undirected.
 
-            * If ``True``, returns a `DiGraph <https://networkx.org/documentation/stable/reference/classes/digraph.html>`__
-              or `MultiDiGraph <https://networkx.org/documentation/stable/reference/classes/multidigraph.html>`__
+            * If ``True``, returns a `DiGraph
+              <https://networkx.org/documentation/stable/reference/classes/digraph.html>`__
+              or `MultiDiGraph
+              <https://networkx.org/documentation/stable/reference/classes/multidigraph.html>`__
               object.
 
-            * If ``False``, returns a `Graph <https://networkx.org/documentation/stable/reference/classes/graph.html>`__
-              or `MultiGraph <https://networkx.org/documentation/stable/reference/classes/multigraph.html>`__
+            * If ``False``, returns a `Graph
+              <https://networkx.org/documentation/stable/reference/classes/graph.html>`__
+              or `MultiGraph
+              <https://networkx.org/documentation/stable/reference/classes/multigraph.html>`__
               object.
 
         :param multigraph: Consider multiple edges among pairs of nodes. Optional. Default
@@ -123,13 +132,16 @@ class GDF():
 
             * If ``None``, decides based on number of edges among node pairs.
 
-            * If ``True``, returns a `MultiGraph <https://networkx.org/documentation/stable/reference/classes/multigraph.html>`__
-              or `MultiDiGraph <https://networkx.org/documentation/stable/reference/classes/multidigraph.html>`__
+            * If ``True``, returns a `MultiGraph
+              <https://networkx.org/documentation/stable/reference/classes/multigraph.html>`__
+              or `MultiDiGraph
+              <https://networkx.org/documentation/stable/reference/classes/multidigraph.html>`__
               object.
 
-            * If ``False``, **sums edge weights** and returns a
-              `Graph <https://networkx.org/documentation/stable/reference/classes/graph.html>`__
-              or `DiGraph <https://networkx.org/documentation/stable/reference/classes/digraph.html>`__
+            * If ``False``, **sums edge weights** and returns a `Graph
+              <https://networkx.org/documentation/stable/reference/classes/graph.html>`__
+              or `DiGraph
+              <https://networkx.org/documentation/stable/reference/classes/digraph.html>`__
               object.
 
         :param node_attr: Accepts a ``list`` or ``bool``. Optional. Default is ``True``.
@@ -147,6 +159,13 @@ class GDF():
             * If ``True``, all edge attributes will be considered.
 
             * If ``False``, no edge attributes will be considered.
+
+        :param encoding: The encoding of the file. Default is ``'utf-8'``.
+            A list of possible values can be found in the `Python documentation
+            <https://docs.python.org/3/library/codecs.html#standard-encodings>`__.
+        :param errors: The error handling scheme. Default is ``'strict'``.
+            A list of possible values can be found in the `Python documentation
+            <https://docs.python.org/3/library/codecs.html#codec-base-classes>`__.
         """
         source, target = "node1", "node2"
 
@@ -163,20 +182,39 @@ class GDF():
         def get_list(content, **params):
             exception = ""
 
-            for quote, char in QUOTES.items():
+            for quotechar, name in QUOTES.items():
                 try:
-                    return pd.read_csv(StringIO(content), quotechar=char, **params)
-
+                    return pd.read_csv(StringIO(content), quotechar=quotechar, **params)
                 except Exception as e:
-                    exception += f"\n  {type(e).__name__}: {str(e).rstrip()} ({quote} quotes)"
+                    exception = f"{exception}\n  {type(e).__name__}: {str(e).rstrip()} ({name} quotes)"
 
             raise Exception("unable to read data from file considering both single"
                             f"and double quotes as text delimiter.{exception}")
 
+        def read(file, encoding, errors):
+            if hasattr(file, "read"):
+                graph = file.read()
+
+                if type(graph) == bytes:
+                    graph = graph.decode(encoding=encoding, errors=errors)
+
+            else:
+                with open(file, "r") as f:
+                    graph = f.read()
+
+            try:
+                nodes, edges = graph.split("nodedef>", 1)[-1].split("edgedef>", 1)
+            except Exception as e:
+                raise RuntimeError("unable to find 'nodedef>' and 'edgedef>' in file.") from e
+
+            return nodes, edges
+
         # Gather node and edge definitions.
-        with open(path, "r") as f:
-            nodes, edges = f.read().split("nodedef>", 1)[-1].split("edgedef>", 1)
-            nodedef, edgedef = get_def(nodes), get_def(edges)
+        nodes, edges = read(file, encoding=encoding, errors=errors)
+
+        # Get node and edge definitions.
+        nodedef = get_def(nodes)
+        edgedef = get_def(edges)
 
         # Build node and edge list assuming single or double quotes as text delimiters.
         nodes = get_list(nodes, names=list(nodedef.keys()), dtype=nodedef, header=0, index_col="name")
@@ -187,7 +225,7 @@ class GDF():
             if len(edges["directed"].unique()) > 1:
                 raise NotImplementedError(
                     "Graphs with both directed and undirected edges are not supported.\n"
-                    "Please manually set the 'directed' parameter to True or False to supress this error."
+                    "Please manually set 'directed' to `True` or `False` to supress this error."
                 )
             directed = edges["directed"][0]
             edges.drop("directed", axis=1, inplace=True)
@@ -237,15 +275,18 @@ class GDF():
     @staticmethod
     def write_gdf(
         G: nx.Graph,
-        path: str,
+        file: Optional[Union[str, BufferedWriter, BytesIO, StringIO, TextIOWrapper]] = None,
         node_attr: Optional[Union[list, bool]] = True,
         edge_attr: Optional[Union[list, bool]] = True,
+        encoding: str = "utf-8",
+        errors: str = "strict",
     ) -> None:
         """
-        Writes a NetworkX graph object to a GDF file.
+        Writes a NetworkX graph object to file path or object.
 
         :param G: NetworkX graph object.
-        :param path: Path to the GDF file.
+        :param object file: Object or string containing path to GDF file. Optional. If ``None``
+            (default), returns string representation of the file.
         :param node_attr: Accepts a ``list`` or ``bool``. Optional. Default is ``True``.
 
            * If a ``list``, only the specified attributes will be considered.
@@ -261,6 +302,12 @@ class GDF():
            * If ``True``, all edge attributes will be considered.
 
            * If ``False``, no edge attributes will be considered.
+        :param encoding: The encoding of the file. Default is ``'utf-8'``.
+            A list of possible values can be found in the `Python documentation
+            <https://docs.python.org/3/library/codecs.html#standard-encodings>`__.
+        :param errors: The error handling scheme. Default is ``'strict'``.
+            A list of possible values can be found in the `Python documentation
+            <https://docs.python.org/3/library/codecs.html#codec-base-classes>`__.
         """
         types = {value.__name__: key for key, value in TYPES.items()}
 
@@ -309,9 +356,24 @@ class GDF():
             edges.columns = get_columns(edges)
             return edges
 
-        # Write nodes and edges to GDF file.
-        get_nodes(G).to_csv(path, index=True, quotechar="'", mode="w")
-        get_edges(G).to_csv(path, index=False, quotechar="'", mode="a")
+        def write_nodes(G, file):
+            """ Write nodes to file. """
+            return get_nodes(G).to_csv(file, index=True, encoding=encoding, errors=errors, quotechar="'", mode="w")
+
+        def write_edges(G, file):
+            """ Write edges to file. """
+            return get_edges(G).to_csv(file, index=False, encoding=encoding, errors=errors, quotechar="'", mode="a")
+
+        if file is None:
+            return f"{write_nodes(G, file)}{write_edges(G, file)}"
+
+        write_nodes(G, file)
+        write_edges(G, file)
+
+        if type(file) in (BytesIO, StringIO):
+            file.seek(0)
+
+        return file
 
 
 read_gdf = GDF.read_gdf

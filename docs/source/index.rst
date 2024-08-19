@@ -40,13 +40,13 @@ The following is a quick example of the package in action, covering its basic fu
 
    >>> from networkx_gdf import read_gdf, write_gdf
    >>>
-   >>> # Builds NetworkX graph object from file.
+   >>> # Reads NetworkX graph object from file.
    >>> G = read_gdf("input_file.gdf")
    >>>
    >>> # Writes NetworkX graph object to file.
    >>> write_gdf(G, "output_file.gdf")
 
-For more information on how to use the package, please refer to its `API reference <api.html>`_.
+For details on the functions above and the package's usage, please refer to its `API reference <api.html>`_.
 
 .. seealso::
 
