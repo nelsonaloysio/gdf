@@ -59,8 +59,12 @@ class GDF():
 
     .. seealso::
 
-       The `GDF format <https://gephi.org/users/supported-graph-formats/gdf-format/>`__
-       specification in Gephi's documentation for more information and examples.
+       * The `GUESS Wiki
+         <https://web.archive.org/web/20080423134917/http://guess.wikispot.org/The_GUESS_.gdf_format>`__
+         (archived) for the official GDF format documentation.
+       * The `Gephi Wiki
+         <https://gephi.org/users/supported-graph-formats/gdf-format/>`__
+         for more information and examples using the format.
 
     .. rubric:: Code example
 
@@ -280,7 +284,7 @@ class GDF():
         edge_attr: Optional[Union[list, bool]] = True,
         encoding: str = "utf-8",
         errors: str = "strict",
-    ) -> None:
+    ) -> Union[str, None]:
         """
         Writes a NetworkX graph object to file path or object.
 

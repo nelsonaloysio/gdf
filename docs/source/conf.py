@@ -23,7 +23,8 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx_rtd_theme",
 ]
-templates_path = ["_templates"]
+add_module_names = False
+# templates_path = ["_templates"]
 
 # -- AutoDoc configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
