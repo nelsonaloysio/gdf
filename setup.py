@@ -19,7 +19,7 @@ setup(
     description=description.strip(),
     long_description=long_description,
     install_requires=install_requires,
-    url="https://github.com/nelsonaloysio/networkx-gdf",
+    url="https://pypi.org/project/networkx-gdf/",
     author="Nelson Aloysio Reis de Almeida Passos",
     long_description_content_type="text/markdown",
     license="MIT",
