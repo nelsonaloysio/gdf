@@ -1,13 +1,14 @@
 # networkx-gdf
 
-[![PyPI version](https://badge.fury.io/py/networkx-gdf.svg)](https://badge.fury.io/py/networkx-gdf)
+[![PyPI package](https://img.shields.io/pypi/v/networkx-gdf?color=%234dc71f)](https://pypi.org/p/networkx-gdf/)
 [![Documentation Status](https://readthedocs.org/projects/networkx-gdf/badge/?version=latest)](https://networkx-gdf.readthedocs.io/en/latest/?badge=latest)
 [![Downloads](https://static.pepy.tech/badge/networkx-gdf)](https://pepy.tech/project/networkx-gdf)
 [![Downloads](https://static.pepy.tech/badge/networkx-gdf/month)](https://pepy.tech/project/networkx-gdf)
+[![License](https://img.shields.io/pypi/l/networkx-temporal)](https://github.com/nelsonaloysio/networkx-gdf/blob/main/LICENSE.md)
 
 Python package to read and write NetworkX graphs as GDF (Graph Data Format).
 
-GDF is a compact file format originally implemented by [GUESS](http://graphexploration.cond.org). Although the software itself is not anymore maintained, the format is still supported by active open-source projects such as [Gephi](https://gephi.org/) (see details [here](https://gephi.org/users/supported-graph-formats/gdf-format/)).
+GDF is a compact file format originally implemented by [GUESS](https://graphexploration.cond.org). Although the software itself is not anymore maintained, the format is still supported by active open-source projects such as [Gephi](https://gephi.org/) (see details [here](https://networkx-gdf.readthedocs.io/en/stable/api.html#networkx_gdf.GDF)).
 
 ## Requirements
 
@@ -38,3 +39,7 @@ write_gdf(G, "output_file.gdf")
 ```
 
 For detailed information on usage, please refer to its [official documentation](https://networkx-gdf.readthedocs.io).
+
+## License
+
+This package is released under the [MIT License](https://github.com/nelsonaloysio/networkx-gdf/blob/main/LICENSE.md).

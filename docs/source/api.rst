@@ -2,15 +2,10 @@
 API Reference
 #############
 
+List of classes and functions available in the :mod:`networkx_gdf` module.
+
 .. currentmodule:: networkx_gdf
 
-.. **Classes**
-.. -----------------
-
 .. autoclass:: GDF
-
-.. **Functions**
-.. -----------
-
-.. autoclass:: read_gdf
-.. autoclass:: write_gdf
+.. autofunction:: read_gdf
+.. autofunction:: write_gdf

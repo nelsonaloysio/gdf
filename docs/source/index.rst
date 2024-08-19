@@ -3,9 +3,14 @@
    :caption: Introduction
 
    Overview <self>
+
+.. toctree::
+   :hidden:
+   :caption: Main documentation
+
    api
 
-.. important::
+.. note::
 
    This documentation was generated on |today| for package release |release|.
 
@@ -15,7 +20,9 @@ Overview
 ########
 
 **NetworkX-GDF** extends the `NetworkX <https://networkx.org>`__ library to support GDF (Graph Data
-Format) files. It provides two functions to read and write GDF files, which are commonly used to
+Format) files.
+
+It provides two functions to read and write GDF files, which are commonly used to
 store graph data in a tabular format. The package is designed to be lightweight on requirements and
 easy to use.
 
@@ -46,7 +53,7 @@ The following is a quick example of the package in action, covering its basic fu
    >>> # Writes NetworkX graph object to file.
    >>> write_gdf(G, "output_file.gdf")
 
-For details on the functions above and the package's usage, please refer to its `API reference <api.html>`_.
+For details on the functions above and the package's usage, please refer to the `API Reference <api.html>`_ page.
 
 .. seealso::
 
