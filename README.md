@@ -1,6 +1,6 @@
 # networkx-gdf
 
-[![PyPI package](https://img.shields.io/pypi/v/networkx-gdf?color=%234dc71f)](https://pypi.org/p/networkx-gdf/)
+[![PyPI package](https://badge.fury.io/py/networkx-gdf.svg)](https://pypi.org/p/networkx-gdf/)
 [![Documentation Status](https://readthedocs.org/projects/networkx-gdf/badge/?version=latest)](https://networkx-gdf.readthedocs.io/en/latest/?badge=latest)
 [![Downloads](https://static.pepy.tech/badge/networkx-gdf)](https://pepy.tech/project/networkx-gdf)
 [![Downloads](https://static.pepy.tech/badge/networkx-gdf/month)](https://pepy.tech/project/networkx-gdf)
