@@ -25,9 +25,10 @@ M = 2**31
 
 class GDF():
     """
-    Implements ``read_gdf`` and ``write_gdf`` methods compatible with GDF (Graph Data Format) files.
+    Implements :func:`~networkx_gdf.read_gdf` and :func:`~networkx_gdf.write_gdf`
+    methods for GDF (Graph Data Format) files.
 
-    GDF is a compact file format originally implemented by `GUESS <http://graphexploration.cond.org/>`__.
+    GDF is a compact file format originally implemented by `GUESS <https://graphexploration.cond.org/>`__.
     Although the software itself is not anymore maintained, the format is still supported by active
     open-source projects such as `Gephi <https://gephi.org/>`__.
     It is based on a tabular text format, and is defined by the simple following rules:
@@ -95,16 +96,14 @@ class GDF():
        >>> G = MyClass.read_gdf("graph.gdf")
        >>> MyClass.write_gdf(G, "graph.gdf")
 
-    For details on each method, please refer to their documentation:
-    `read_gdf <https://networkx-gdf.readthedocs.io/en/latest/api.html#networkx_gdf.read_gdf>`_
-    and
-    `write_gdf <https://networkx-gdf.readthedocs.io/en/latest/api.html#networkx_gdf.write_gdf>`_.
+    Additional parameters are available for both methods and described in their documentation.
     """
     @staticmethod
     def read_gdf(
         file: Union[str, BufferedReader, BytesIO, StringIO, TextIOWrapper],
         directed: Optional[bool] = None,
         multigraph: Optional[bool] = None,
+        weighted: Optional[bool] = True,
         node_attr: Optional[Union[list, bool]] = True,
         edge_attr: Optional[Union[list, bool]] = True,
         encoding: str = "utf-8",
@@ -134,7 +133,9 @@ class GDF():
         :param multigraph: Consider multiple edges among pairs of nodes. Optional. Default
             is ``None``.
 
-            * If ``None``, decides based on number of edges among node pairs.
+            * If ``None``, decides based on number of edges among node pairs. In case of multiple
+              edges among the same node pairs, the graph will be considered as a multigraph,
+              preserving dynamic edge-level attributes.
 
             * If ``True``, returns a `MultiGraph
               <https://networkx.org/documentation/stable/reference/classes/multigraph.html>`__
@@ -147,6 +148,9 @@ class GDF():
               or `DiGraph
               <https://networkx.org/documentation/stable/reference/classes/digraph.html>`__
               object.
+
+        :param weighted: Consider edge weights. Optional. Default is ``True``.
+            Only applicable if ``multigraph`` is manually set as ``False``.
 
         :param node_attr: Accepts a ``list`` or ``bool``. Optional. Default is ``True``.
 
@@ -165,11 +169,11 @@ class GDF():
             * If ``False``, no edge attributes will be considered.
 
         :param encoding: The encoding of the file. Default is ``'utf-8'``.
-            A list of possible values can be found in the `Python documentation
+            For a list of possible values, see `Python documentation: Standard Encodings
             <https://docs.python.org/3/library/codecs.html#standard-encodings>`__.
         :param errors: The error handling scheme. Default is ``'strict'``.
-            A list of possible values can be found in the `Python documentation
-            <https://docs.python.org/3/library/codecs.html#codec-base-classes>`__.
+            For a list of possible values, see `Python documentation: Error Handlers
+            <https://docs.python.org/3/library/codecs.html#error-handlers>`__.
         """
         source, target = "node1", "node2"
 
@@ -212,6 +216,21 @@ class GDF():
                 raise RuntimeError("unable to find 'nodedef>' and 'edgedef>' in file.") from e
 
             return nodes, edges
+
+        assert directed is None or type(directed) == bool,\
+            f"Expected 'directed' to be a boolean, received: {type(directed)}."
+        assert multigraph is None or type(multigraph) == bool,\
+            f"Expected 'multigraph' to be a boolean, received: {type(multigraph)}."
+        assert weighted is None or type(weighted) == bool,\
+            f"Expected 'weighted' to be a boolean, received: {type(weighted)}."
+        assert node_attr is None or type(node_attr) in (list, bool),\
+            f"Expected 'node_attr' to be a list or boolean, received: {type(node_attr)}."
+        assert edge_attr is None or type(edge_attr) in (list, bool),\
+            f"Expected 'edge_attr' to be a list or boolean, received: {type(edge_attr)}."
+        assert type(encoding) == str,\
+            f"Expected 'encoding' to be a string, received: {type(encoding)}."
+        assert type(errors) == str,\
+            f"Expected 'errors' to be a string, received: {type(errors)}."
 
         # Gather node and edge definitions.
         nodes, edges = read(file, encoding=encoding, errors=errors)
@@ -260,7 +279,7 @@ class GDF():
         ))
 
         # Assign weight to edges.
-        if not multigraph:
+        if weighted and not multigraph:
             weight = pd\
                 .DataFrame({
                     "source": edges[source],
@@ -307,11 +326,11 @@ class GDF():
 
            * If ``False``, no edge attributes will be considered.
         :param encoding: The encoding of the file. Default is ``'utf-8'``.
-            A list of possible values can be found in the `Python documentation
+            For a list of possible values, see `Python documentation: Standard Encodings
             <https://docs.python.org/3/library/codecs.html#standard-encodings>`__.
         :param errors: The error handling scheme. Default is ``'strict'``.
-            A list of possible values can be found in the `Python documentation
-            <https://docs.python.org/3/library/codecs.html#codec-base-classes>`__.
+            For a list of possible values, see `Python documentation: Error Handlers
+            <https://docs.python.org/3/library/codecs.html#error-handlers>`__.
         """
         types = {value.__name__: key for key, value in TYPES.items()}
 
@@ -367,6 +386,15 @@ class GDF():
         def write_edges(G, file):
             """ Write edges to file. """
             return get_edges(G).to_csv(file, index=False, encoding=encoding, errors=errors, quotechar="'", mode="a")
+
+        assert node_attr is None or type(node_attr) in (list, bool),\
+            f"Expected 'node_attr' to be a list or boolean, received: {type(node_attr)}."
+        assert edge_attr is None or type(edge_attr) in (list, bool),\
+            f"Expected 'edge_attr' to be a list or boolean, received: {type(edge_attr)}."
+        assert type(encoding) == str,\
+            f"Expected 'encoding' to be a string, received: {type(encoding)}."
+        assert type(errors) == str,\
+            f"Expected 'errors' to be a string, received: {type(errors)}."
 
         if file is None:
             return f"{write_nodes(G, file)}{write_edges(G, file)}"

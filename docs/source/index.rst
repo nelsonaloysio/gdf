@@ -15,9 +15,30 @@
    This documentation was generated on |today| for package release |release|.
 
 
-########
-Overview
-########
+############
+networkx-gdf
+############
+
+.. image:: https://badge.fury.io/py/networkx-gdf.svg
+   :target: https://pypi.org/project/networkx-gdf/
+   :alt: PyPI version
+
+.. image:: https://readthedocs.org/projects/networkx-gdf/badge/?version=latest
+   :target: https://networkx-gdf.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
+
+.. image:: https://static.pepy.tech/badge/networkx-gdf
+   :target: https://pepy.tech/project/networkx-gdf
+   :alt: Downloads
+
+.. image:: https://static.pepy.tech/badge/networkx-gdf/month
+   :target: https://pepy.tech/project/networkx-gdf
+   :alt: Downloads
+
+.. image:: https://img.shields.io/pypi/l/networkx-gdf
+   :target: https://github.com/nelsonaloysio/networkx-gdf/blob/main/LICENSE.md
+   :alt: License
+
 
 **NetworkX-GDF** extends the `NetworkX <https://networkx.org>`__ library to support GDF (Graph Data
 Format) files.
@@ -57,4 +78,29 @@ For details on the functions above and the package's usage, please refer to the 
 
 .. seealso::
 
-   The package's `GitHub repository <https://github.com/nelsonaloysio/networkx-temporal>`_ for the latest updates and issues. Contributions are welcome!
+   The package's `GitHub repository <https://github.com/nelsonaloysio/networkx-gdf>`_ for the latest updates and issues. Contributions are welcome!
+
+
+Cite
+====
+
+If this package is useful for your research, please kindly consider citing the
+`NetworkX paper <https://conference.scipy.org/proceedings/scipy2008/paper_2/>`_:
+
+   Hagberg, Aric A., Schult, Daniel A., Swart, Pieter J. (2008).
+   ''Exploring Network Structure, Dynamics, and Function using NetworkX''.
+   In: Proceedings of the 7th Python in Science Conference (SciPy2008).
+   Pasadena (CA), USA, August 2008.
+
+.. code-block:: tex
+
+   @inproceedings{networkx2008,
+      author    = {Aric A. Hagberg and Daniel A. Schult and Pieter J. Swart},
+      title     = {Exploring Network Structure, Dynamics, and Function using NetworkX},
+      booktitle = {Proceedings of the 7th Python in Science Conference},
+      pages     = {11--15},
+      address   = {Pasadena, CA USA},
+      year      = {2008},
+      editor    = {Ga\"el Varoquaux and Travis Vaught and Jarrod Millman},
+      url       = {https://conference.scipy.org/proceedings/scipy2008/paper_2/},
+   }
