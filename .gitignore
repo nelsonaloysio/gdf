@@ -26,6 +26,6 @@ sdist/
 share/python-wheels/
 *.spec
 target/
-test/
+*tests/
 var/
 wheels/

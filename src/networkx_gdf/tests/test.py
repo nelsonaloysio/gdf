@@ -3,7 +3,7 @@
 from io import StringIO, BytesIO
 from os import remove
 
-from networkx_gdf import GDF, read_gdf, write_gdf
+from src.networkx_gdf.networkx_gdf import GDF, read_gdf, write_gdf
 
 GRAPH = """
 nodedef>name VARCHAR,label VARCHAR

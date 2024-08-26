@@ -43,20 +43,17 @@ networkx-gdf
 **NetworkX-GDF** extends the `NetworkX <https://networkx.org>`__ library to support GDF (Graph Data
 Format) files.
 
-It provides two functions to read and write GDF files, which are commonly used to
-store graph data in a tabular format. The package is designed to be lightweight on requirements and
-easy to use.
+It provides two functions to read and write GDF files, which are used to store graph data in a
+tabular format. The package is designed to be lightweight on requirements and easy to use.
 
 Install
 =======
 
-The package is readily available from `PyPI <https://pypi.org/project/networkx-gdf/>`_:
+The package supports **Python 3.7++** and is readily available from `PyPI <https://pypi.org/project/networkx-gdf/>`_:
 
 .. code-block:: bash
 
    $ pip install networkx-gdf
-
-It supports **Python 3.7+** and has been tested on Linux, Windows, and macOS.
 
 
 Quick start
@@ -74,18 +71,20 @@ The following is a quick example of the package in action, covering its basic fu
    >>> # Writes NetworkX graph object to file.
    >>> write_gdf(G, "output_file.gdf")
 
-For details on the functions above and the package's usage, please refer to the `API Reference <api.html>`_ page.
+For details on the functions above and the package's usage, please refer to the
+`API Reference <api.html>`__ page.
 
 .. seealso::
 
-   The package's `GitHub repository <https://github.com/nelsonaloysio/networkx-gdf>`_ for the latest updates and issues. Contributions are welcome!
+   The package's `GitHub repository <https://github.com/nelsonaloysio/networkx-gdf>`__
+   for the latest updates and issues. Contributions are welcome!
 
 
 Cite
 ====
 
 If this package is useful for your research, please kindly consider citing the
-`NetworkX paper <https://conference.scipy.org/proceedings/scipy2008/paper_2/>`_:
+`NetworkX paper <https://conference.scipy.org/proceedings/scipy2008/paper_2/>`__:
 
    Hagberg, Aric A., Schult, Daniel A., Swart, Pieter J. (2008).
    ''Exploring Network Structure, Dynamics, and Function using NetworkX''.
