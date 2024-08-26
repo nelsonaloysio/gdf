@@ -4,7 +4,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 import os, sys
-sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('../../src'))
 
 from networkx_gdf import __version__
 release = version = __version__
@@ -24,7 +24,6 @@ extensions = [
     "sphinx_rtd_theme",
 ]
 add_module_names = False
-# templates_path = ["_templates"]
 
 # -- AutoDoc configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html

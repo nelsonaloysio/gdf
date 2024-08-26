@@ -4,8 +4,6 @@ from typing import Optional, Union
 import networkx as nx
 import pandas as pd
 
-from __version__ import __version__
-
 TYPES = {
     "VARCHAR": str,
     "INT": int,
@@ -112,7 +110,7 @@ class GDF():
         """
         Returns a NetworkX graph object from file path or object.
 
-        :param object file: Object or string containing path to GDF file.
+        :param object file: File object or string containing path to GDF file.
         :param directed: Consider edges as directed or undirected. Optional. Default is ``None``.
 
             * If ``None``, decides based on ``'directed'`` edge attribute in file, if it exists.
@@ -308,8 +306,8 @@ class GDF():
         Writes a NetworkX graph object to file path or object.
 
         :param G: NetworkX graph object.
-        :param object file: Object or string containing path to GDF file. Optional. If ``None``
-            (default), returns string representation of the file.
+        :param object file: File object or string containing path to GDF file. Optional. If ``None``
+            (default), returns content as string.
         :param node_attr: Accepts a ``list`` or ``bool``. Optional. Default is ``True``.
 
            * If a ``list``, only the specified attributes will be considered.
@@ -338,7 +336,7 @@ class GDF():
             """ Add attribute type to column names. """
             dtype = f"{types.get(series.dtype.__str__().lower().rstrip('0123456789'), 'VARCHAR')}"
 
-            if dtype == "LONG" and all(-M <= m < M for m in (series.min(), series.max())):
+            if dtype == "LONG" and -M <= series.min() <= series.max() < M:
                 return "INT"
 
             if dtype == "DOUBLE" and series.astype(str).apply(str.__len__).max() <= 8:
@@ -404,8 +402,6 @@ class GDF():
 
         if type(file) in (BytesIO, StringIO):
             file.seek(0)
-
-        return file
 
 
 read_gdf = GDF.read_gdf
