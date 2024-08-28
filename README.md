@@ -4,7 +4,7 @@
 [![Documentation Status](https://readthedocs.org/projects/networkx-gdf/badge/?version=latest)](https://networkx-gdf.readthedocs.io/en/latest/?badge=latest)
 [![Downloads](https://static.pepy.tech/badge/networkx-gdf)](https://pepy.tech/project/networkx-gdf)
 [![Downloads](https://static.pepy.tech/badge/networkx-gdf/month)](https://pepy.tech/project/networkx-gdf)
-[![License](https://img.shields.io/pypi/l/networkx-temporal)](https://github.com/nelsonaloysio/networkx-gdf/blob/main/LICENSE.md)
+[![License](https://img.shields.io/pypi/l/networkx-gdf)](https://github.com/nelsonaloysio/networkx-gdf/blob/main/LICENSE.md)
 
 Python package to read and write NetworkX graphs as GDF (Graph Data Format).
 
